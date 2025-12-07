@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="cat.jpg" type="image/x-icon">
+    <title>中华田园猫 - 中国本土猫咪介绍</title>
+    <style>
+        /* 基础样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+        
+        /* 导航栏样式 */
+        nav {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e67e22;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #e67e22;
+        }
+        
+        /* 主要内容区域 */
+        .container {
+            max-width: 1200px;
+            margin: 80px auto 0;
+            padding: 0 2rem;
+        }
+        
+        /* 页眉区域 */
+        header {
+            text-align: center;
+            padding: 4rem 0;
+            background: linear-gradient(135deg, #fdf6e3 0%, #f5e6ca 100%);
+            border-radius: 10px;
+            margin-bottom: 3rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* 猫咪品种展示区域 */
+        .section-title {
+            text-align: center;
+            margin: 3rem 0 2rem;
+            font-size: 2rem;
+            color: #333;
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: #e67e22;
+            margin: 10px auto;
+        }
+        
+        .cats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .cat-card {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .cat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .cat-image {
+            height: 200px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 1.2rem;
+        }
+
+        .cat-image img{
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .cat-info {
+            padding: 1.5rem;
+        }
+        
+        .cat-name {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        .cat-description {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .cat-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .feature-tag {
+            background: #f0f0f0;
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        /* 猫咪特点部分 */
+        .features-section {
+            background: #fff;
+            padding: 3rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 3rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-item {
+            text-align: center;
+            padding: 1.5rem;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #e67e22;
+        }
+        
+        .feature-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        /* 页脚样式 */
+        footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                margin-top: 1rem;
+            }
+            
+            .nav-links li {
+                margin: 0 0.5rem;
+            }
+            
+            .container {
+                margin-top: 120px;
+                padding: 0 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .cats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .features-section {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">中华田园猫</div>
+            <ul class="nav-links">
+                <li><a href="#breeds">猫咪品种</a></li>
+                <li><a href="#features">特点优势</a></li>
+                <li><a href="#care">饲养建议</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <div class="container">
+        <!-- 页头 -->
+        <header>
+            <h1>中国本土猫咪品种介绍</h1>
+            <p class="subtitle">中华田园猫是中国本土的自然猫种，经过千百年的自然演化，形成了各具特色的品种。它们不仅颜值高、身体强壮，而且适应能力强，是非常优秀的伴侣动物。</p>
+        </header>
+
+        <!-- 猫咪品种展示 -->
+        <section id="breeds">
+            <h2 class="section-title">常见中国本土猫咪品种</h2>
+            <div class="cats-grid">
+                <!-- 狸花猫 -->
+                <div class="cat-card">
+                    <div class="cat-image">
+                        <img src="lihua.jpeg" alt="">
+                    </div>
+                    <div class="cat-info">
+                        <h3 class="cat-name">狸花猫</h3>
+                        <p class="cat-description">身上有黑、灰相间的美丽虎斑纹，体格健壮，头脑聪明，以捕猎技巧而著称。性格独立但认主后非常忠诚[1](@ref)。</p>
+                        <div class="cat-features">
+                            <span class="feature-tag">虎斑纹</span>
+                            <span class="feature-tag">聪明机灵</span>
+                            <span class="feature-tag">捕猎能手</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 橘猫 -->
+                <div class="cat-card">
+                    <div class="cat-image">
+                        <img src="jumao.jpg" alt="">
+                    </div>
+                    <div class="cat-info">
+                        <h3 class="cat-name">橘猫</h3>
+                        <p class="cat-description">橘猫是毛色分类而非品种，国内大部分橘猫都是狸花猫。它们以爱吃、黏人、会撒娇著称，有"十只橘猫九只胖"的说法[1,2](@ref)。</p>
+                        <div class="cat-features">
+                            <span class="feature-tag">橘色被毛</span>
+                            <span class="feature-tag">性格温和</span>
+                            <span class="feature-tag">易胖体质</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 三花猫 -->
+                <div class="cat-card">
+                    <div class="cat-image">
+                        <img src="sanhua.jpg" alt="">
+                    </div>
+                    <div class="cat-info">
+                        <h3 class="cat-name">三花猫</h3>
+                        <p class="cat-description">身上有黑、橘和白三种颜色的猫，大部分三花猫都是母猫。每只三花猫的花纹都是独一无二的。性格活泼开朗，非常适合饲养[1,4](@ref)。</p>
+                        <div class="cat-features">
+                            <span class="feature-tag">三色被毛</span>
+                            <span class="feature-tag">多为母猫</span>
+                            <span class="feature-tag">活泼开朗</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 山东狮子猫 -->
+                <div class="cat-card">
+                    <div class="cat-image">
+                        <img src="shizi.webp" alt="">
+                    </div>
+                    <div class="cat-info">
+                        <h3 class="cat-name">山东狮子猫</h3>
+                        <p class="cat-description">又称临清狮子猫，由波斯猫与鲁西本地狸猫杂交繁育而来。以纯白毛色和鸳鸯眼(一蓝一黄)最为珍贵。身体强壮、性格温婉、依赖主人[1,3](@ref)。</p>
+                        <div class="cat-features">
+                            <span class="feature-tag">长毛</span>
+                            <span class="feature-tag">鸳鸯眼</span>
+                            <span class="feature-tag">温顺亲人</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 奶牛猫 -->
+                <div class="cat-card">
+                    <div class="cat-image">
+                        <img src="nainiu.webp" alt="">
+                    </div>
+                    <div class="cat-info">
+                        <h3 class="cat-name">奶牛猫</h3>
+                        <p class="cat-description">因黑白花色像奶牛而得名，好奇心强，黏人，活泼，精力旺盛，有"猫中哈士奇"之称，经常上演迷惑行为[1,2](@ref)。</p>
+                        <div class="cat-features">
+                            <span class="feature-tag">黑白花色</span>
+                            <span class="feature-tag">活泼好动</span>
+                            <span class="feature-tag">好奇心强</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 四川简州猫 -->
+                <div class="cat-card">
+                    <div class="cat-image">
+                        <img src="jianzhou.jpg" alt="">
+                    </div>
+                    <div class="cat-info">
+                        <h3 class="cat-name">四川简州猫</h3>
+                        <p class="cat-description">产于四川地区的古老猫种，耳朵特别，有凸出的卷层，看似四只耳朵，故又名"四耳猫"。身材强壮，动作敏捷，是捕鼠能手[3](@ref)。</p>
+                        <div class="cat-features">
+                            <span class="feature-tag">四耳特征</span>
+                            <span class="feature-tag">捕鼠能手</span>
+                            <span class="feature-tag">历史悠久</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 中华田园猫特点 -->
+        <section id="features">
+            <h2 class="section-title">中华田园猫的特点与优势</h2>
+            <div class="features-section">
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon">💪</div>
+                        <h3 class="feature-title">身体强壮</h3>
+                        <p>经过自然选择，身体抵抗力强，患病风险相对较小[1](@ref)。</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🏃</div>
+                        <h3 class="feature-title">活泼好动</h3>
+                        <p>精力充沛，有一定的捕猎技巧，能为家庭增添活力[1](@ref)。</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🌍</div>
+                        <h3 class="feature-title">适应力强</h3>
+                        <p>能很好地适应各种环境，容易饲养[1](@ref)。</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🎓</div>
+                        <h3 class="feature-title">聪明伶俐</h3>
+                        <p>学习能力强，能很快学会上厕所、埋猫砂等[1](@ref)。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 饲养建议 -->
+        <section id="care">
+            <h2 class="section-title">饲养注意事项</h2>
+            <div class="features-section">
+                <p>虽然中华田园猫身体强壮、容易饲养，但仍需注意以下事项[1](@ref)：</p>
+                <ul style="margin: 1rem 0 1rem 2rem;">
+                    <li>避免喂食巧克力、洋葱、葡萄、牛奶等对猫有害的食物</li>
+                    <li>饮食不宜过咸，剩饭剩菜不适合猫咪长期食用</li>
+                    <li>高层住宅需安装防护网，防止猫咪意外坠落</li>
+                    <li>定期接种疫苗和驱虫，保障猫咪健康</li>
+                    <li>适时进行绝育手术，控制流浪猫数量</li>
+                    <li>提供足够的活动空间，经常与猫咪互动玩耍</li>
+                    <li>尽量避免散养，减少意外风险</li>
+                </ul>
+                <p>只要科学饲养，中华田园猫能成为非常出色的家庭伴侣，给您带来无数欢乐时光。</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+        <p>© 2023 中华田园猫介绍 | 本页面仅用于展示中国本土猫咪品种</p>
+    </footer>
+
+    <script>
+        // 平滑滚动到锚点
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+            } else {
+                nav.style.boxShadow = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
