@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小猫接金币</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #87CEEB;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            touch-action: manipulation;
+        }
+        
+        #game-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            margin: 20px auto;
+            background-color: #87CEEB;
+            border: 5px solid #4682B4;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        #cat {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            bottom: 50px;
+            left: 350px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%23FFA07A"/><circle cx="35" cy="40" r="5" fill="%23000"/><circle cx="65" cy="40" r="5" fill="%23000"/><path d="M40 65 Q50 75 60 65" stroke="%23000" stroke-width="2" fill="none"/><path d="M20 30 Q10 10 30 20" stroke="%23000" stroke-width="3" fill="none"/><path d="M80 30 Q90 10 70 20" stroke="%23000" stroke-width="3" fill="none"/></svg>');
+            background-size: contain;
+            z-index: 10;
+            transition: left 0.1s ease;
+        }
+        
+        .coin {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%23FFD700"/><circle cx="50" cy="50" r="30" fill="%23FFEC8B"/><path d="M50 20 A30 30 0 0 1 50 80 A30 30 0 0 1 50 20" fill="%23FFD700"/></svg>');
+            background-size: contain;
+            z-index: 5;
+        }
+        
+        #ground {
+            position: absolute;
+            width: 100%;
+            height: 50px;
+            bottom: 0;
+            background-color: #8B4513;
+            z-index: 1;
+        }
+        
+        #score-display {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 24px;
+            color: #FFF;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 5px;
+            z-index: 15;
+        }
+        
+        #time-display {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: #FFF;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 5px;
+            z-index: 15;
+        }
+        
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+        }
+        
+        #start-screen h1 {
+            color: #FFF;
+            font-size: 48px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        #instructions {
+            color: #FFF;
+            font-size: 18px;
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 80%;
+        }
+        
+        #start-button {
+            padding: 15px 30px;
+            font-size: 24px;
+            background-color: #FFA07A;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        #game-over {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+        }
+        
+        #game-over h1 {
+            color: #FFF;
+            font-size: 48px;
+            margin-bottom: 30px;
+        }
+        
+        #restart-button {
+            padding: 15px 30px;
+            font-size: 24px;
+            background-color: #FFA07A;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="ground"></div>
+        <div id="cat"></div>
+        <div id="score-display">分数: 0</div>
+        <div id="time-display">时间: 60</div>
+        
+        <div id="start-screen">
+            <h1>小猫接金币<br>大富翁</h1>
+            <div id="instructions">
+                使用键盘左右箭头键控制小猫移动<br>
+                接住从天上掉落的金币获取分数<br>
+                60秒内尽可能多地接金币！
+            </div>
+            <button id="start-button">开始游戏</button>
+        </div>
+        
+        <div id="game-over">
+            <h1>游戏结束!</h1>
+            <p id="final-score" style="color: white; font-size: 24px; margin-bottom: 20px;"></p>
+            <button id="restart-button">再玩一次</button>
+        </div>
+    </div>
+
+    <script>
+        // 游戏变量
+        let score = 0;
+        let gameActive = false;
+        let gameTime = 60;
+        let catPosition = 350;
+        let catSpeed = 10;
+        let keys = {};
+        let coinInterval;
+        let gameTimer;
+        
+        // DOM元素
+        const gameContainer = document.getElementById('game-container');
+        const cat = document.getElementById('cat');
+        const scoreDisplay = document.getElementById('score-display');
+        const timeDisplay = document.getElementById('time-display');
+        const startScreen = document.getElementById('start-screen');
+        const startButton = document.getElementById('start-button');
+        const gameOverScreen = document.getElementById('game-over');
+        const finalScore = document.getElementById('final-score');
+        const restartButton = document.getElementById('restart-button');
+        
+        // 开始游戏
+        startButton.addEventListener('click', startGame);
+        restartButton.addEventListener('click', startGame);
+        
+        // 键盘控制
+        document.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+        });
+        
+        document.addEventListener('keyup', (e) => {
+            keys[e.key] = false;
+        });
+        
+        // 游戏主循环
+        function gameLoop() {
+            if (!gameActive) return;
+            
+            // 控制小猫移动
+            if (keys['ArrowLeft'] || keys['a']) {
+                catPosition = Math.max(0, catPosition - catSpeed);
+            }
+            if (keys['ArrowRight'] || keys['d']) {
+                catPosition = Math.min(700, catPosition + catSpeed);
+            }
+            
+            cat.style.left = catPosition + 'px';
+            
+            // 检查碰撞
+            checkCoinCollision();
+            
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // 创建金币
+        function createCoin() {
+            if (!gameActive) return;
+            
+            const coin = document.createElement('div');
+            coin.className = 'coin';
+            
+            const x = 50 + Math.random() * 700;
+            coin.style.left = `${x}px`;
+            coin.style.top = '-40px';
+            
+            gameContainer.appendChild(coin);
+            
+            // 金币下落动画
+            let fallSpeed = 2 + Math.random() * 3;
+            let rotation = 0;
+            
+            function animateCoin() {
+                if (!gameActive) {
+                    coin.remove();
+                    return;
+                }
+                
+                const currentTop = parseInt(coin.style.top);
+                const newTop = currentTop + fallSpeed;
+                coin.style.top = `${newTop}px`;
+                
+                // 旋转效果
+                rotation += 5;
+                coin.style.transform = `rotate(${rotation}deg)`;
+                
+                // 如果金币落地，移除
+                if (newTop > 600) {
+                    coin.remove();
+                    return;
+                }
+                
+                requestAnimationFrame(animateCoin);
+            }
+            
+            animateCoin();
+        }
+        
+        // 检查金币碰撞
+        function checkCoinCollision() {
+            const coins = document.querySelectorAll('.coin');
+            const catRect = cat.getBoundingClientRect();
+            
+            coins.forEach(coin => {
+                const coinRect = coin.getBoundingClientRect();
+                
+                if (
+                    catRect.left < coinRect.right &&
+                    catRect.right > coinRect.left &&
+                    catRect.top < coinRect.bottom &&
+                    catRect.bottom > coinRect.top
+                ) {
+                    // 接到金币
+                    score += 10;
+                    scoreDisplay.textContent = `分数: ${score}`;
+                    coin.remove();
+                }
+            });
+        }
+        
+        // 游戏计时
+        function updateTimer() {
+            if (!gameActive) return;
+            
+            gameTime--;
+            timeDisplay.textContent = `时间: ${gameTime}`;
+            
+            if (gameTime <= 0) {
+                endGame();
+                return;
+            }
+            
+            setTimeout(updateTimer, 1000);
+        }
+        
+        // 开始游戏
+        function startGame() {
+            // 重置游戏状态
+            score = 0;
+            gameTime = 60;
+            gameActive = true;
+            catPosition = 350;
+            
+            // 清除所有金币
+            document.querySelectorAll('.coin').forEach(coin => {
+                coin.remove();
+            });
+            
+            // 重置小猫位置
+            cat.style.left = '350px';
+            
+            // 更新UI
+            scoreDisplay.textContent = `分数: ${score}`;
+            timeDisplay.textContent = `时间: ${gameTime}`;
+            startScreen.style.display = 'none';
+            gameOverScreen.style.display = 'none';
+            
+            // 开始游戏循环
+            coinInterval = setInterval(createCoin, 800);
+            gameTimer = setTimeout(updateTimer, 1000);
+            gameLoop();
+        }
+        
+        // 结束游戏
+        function endGame() {
+            gameActive = false;
+            clearInterval(coinInterval);
+            clearTimeout(gameTimer);
+            finalScore.textContent = `最终分数: ${score}`;
+            gameOverScreen.style.display = 'flex';
+        }
+    </script>
+</body>
+</html>

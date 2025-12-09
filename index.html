@@ -1,461 +1,539 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>猫咪小游戏乐园</title>
     <link rel="shortcut icon" href="cat.jpg" type="image/x-icon">
-    <title>中华田园猫 - 中国本土猫咪介绍</title>
     <style>
-        /* 基础样式重置 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
         }
-        
+
         body {
-            font-family: 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background-color: #f9f4e8;
+            color: #5a4a42;
             line-height: 1.6;
-            color: #333;
-            background-color: #f9f9f9;
         }
-        
-        /* 导航栏样式 */
-        nav {
-            background-color: #fff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-        
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-        }
-        
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #e67e22;
-        }
-        
-        .nav-links {
-            display: flex;
-            list-style: none;
-        }
-        
-        .nav-links li {
-            margin-left: 2rem;
-        }
-        
-        .nav-links a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        
-        .nav-links a:hover {
-            color: #e67e22;
-        }
-        
-        /* 主要内容区域 */
-        .container {
-            max-width: 1200px;
-            margin: 80px auto 0;
-            padding: 0 2rem;
-        }
-        
-        /* 页眉区域 */
+
         header {
+            background-color: #ffd5cd;
+            padding: 2rem 0;
             text-align: center;
-            padding: 4rem 0;
-            background: linear-gradient(135deg, #fdf6e3 0%, #f5e6ca 100%);
-            border-radius: 10px;
-            margin-bottom: 3rem;
+            border-bottom: 3px solid #ffb7b2;
         }
-        
+
         h1 {
             font-size: 2.5rem;
             margin-bottom: 1rem;
-            color: #333;
+            color: #5a4a42;
         }
-        
+
         .subtitle {
             font-size: 1.2rem;
-            color: #666;
-            max-width: 700px;
+            color: #7a6a62;
+        }
+
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
+            padding: 2rem;
         }
-        
-        /* 猫咪品种展示区域 */
-        .section-title {
-            text-align: center;
-            margin: 3rem 0 2rem;
-            font-size: 2rem;
-            color: #333;
-            position: relative;
-        }
-        
-        .section-title:after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 3px;
-            background: #e67e22;
-            margin: 10px auto;
-        }
-        
-        .cats-grid {
+
+        .games-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            margin-bottom: 3rem;
+            margin-top: 2rem;
         }
-        
-        .cat-card {
-            background: #fff;
+
+        .game-card {
+            background-color: white;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
         }
-        
-        .cat-card:hover {
+
+        .game-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
         }
-        
-        .cat-image {
+
+        .game-image {
             height: 200px;
-            background-color: #f0f0f0;
+            background-color: #ffd5cd;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #999;
-            font-size: 1.2rem;
+            font-size: 3rem;
         }
 
-        .cat-image img{
+        .game-content {
+            padding: 1.5rem;
+        }
+
+        .game-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #5a4a42;
+        }
+
+        .game-description {
+            margin-bottom: 1.5rem;
+            color: #7a6a62;
+        }
+
+        .play-btn {
+            display: inline-block;
+            background-color: #ffb7b2;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .play-btn:hover {
+            background-color: #ff9e96;
+        }
+
+        .game-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
         }
-        
-        .cat-info {
-            padding: 1.5rem;
-        }
-        
-        .cat-name {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-            color: #333;
-        }
-        
-        .cat-description {
-            color: #666;
-            margin-bottom: 1rem;
-        }
-        
-        .cat-features {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-        
-        .feature-tag {
-            background: #f0f0f0;
-            padding: 0.3rem 0.7rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            color: #666;
-        }
-        
-        /* 猫咪特点部分 */
-        .features-section {
-            background: #fff;
-            padding: 3rem;
+
+        .game-area {
+            background-color: white;
+            padding: 2rem;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            margin-bottom: 3rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
         }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
         }
-        
-        .feature-item {
-            text-align: center;
-            padding: 1.5rem;
-        }
-        
-        .feature-icon {
-            font-size: 2.5rem;
+
+        /* 追逐游戏样式 */
+        #chase-game {
+            height: 400px;
+            position: relative;
+            background-color: #f0f0f0;
             margin-bottom: 1rem;
-            color: #e67e22;
         }
-        
-        .feature-title {
+
+        #cat {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%23ff9e96"/><circle cx="35" cy="40" r="5" fill="%235a4a42"/><circle cx="65" cy="40" r="5" fill="%235a4a42"/><path d="M40 65 Q50 75 60 65" stroke="%235a4a42" stroke-width="2" fill="none"/><path d="M20 30 Q10 10 30 20" stroke="%235a4a42" stroke-width="3" fill="none"/><path d="M80 30 Q90 10 70 20" stroke="%235a4a42" stroke-width="3" fill="none"/></svg>');
+            background-size: contain;
+            transition: left 0.3s ease, top 0.3s ease;
+        }
+
+        /* 记忆游戏样式 */
+        #memory-game {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .memory-card {
+            height: 100px;
+            background-color: #ffd5cd;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .memory-card.flipped {
+            background-color: white;
+            transform: rotateY(180deg);
+        }
+
+        /* 点击游戏样式 */
+        #click-game {
+            height: 400px;
+            position: relative;
+            background-color: #f0f0f0;
+            margin-bottom: 1rem;
+        }
+
+        .click-cat {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%23ff9e96"/><circle cx="35" cy="40" r="5" fill="%235a4a42"/><circle cx="65" cy="40" r="5" fill="%235a4a42"/><path d="M40 65 Q50 75 60 65" stroke="%235a4a42" stroke-width="2" fill="none"/></svg>');
+            background-size: contain;
+            cursor: pointer;
+        }
+
+        .score-display {
             font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-            color: #333;
+            margin-bottom: 1rem;
+            font-weight: bold;
         }
-        
-        /* 页脚样式 */
-        footer {
-            background: #333;
-            color: #fff;
-            text-align: center;
-            padding: 2rem 0;
-            margin-top: 3rem;
+
+        #other-screen .game-area {
+            width: 70vw;
+            height: 90vh;
         }
-        
-        /* 响应式设计 */
+
+        #other-screen .game-area iframe {
+            width: 100%;
+            height: 100%;
+        }
+
         @media (max-width: 768px) {
-            .nav-container {
-                flex-direction: column;
-                padding: 1rem;
-            }
-            
-            .nav-links {
-                margin-top: 1rem;
-            }
-            
-            .nav-links li {
-                margin: 0 0.5rem;
-            }
-            
-            .container {
-                margin-top: 120px;
-                padding: 0 1rem;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .cats-grid {
+            .games-container {
                 grid-template-columns: 1fr;
             }
-            
-            .features-section {
-                padding: 2rem 1rem;
+
+            h1 {
+                font-size: 2rem;
             }
         }
     </style>
 </head>
+
 <body>
-    <!-- 导航栏 -->
-    <nav>
-        <div class="nav-container">
-            <div class="logo">中华田园猫</div>
-            <ul class="nav-links">
-                <li><a href="#breeds">猫咪品种</a></li>
-                <li><a href="#features">特点优势</a></li>
-                <li><a href="#care">饲养建议</a></li>
-            </ul>
-        </div>
-    </nav>
+    <header>
+        <h1>🐱 猫咪小游戏乐园 🐱</h1>
+        <p class="subtitle">简约可爱的猫咪主题小游戏集合</p>
+    </header>
 
-    <!-- 主要内容 -->
     <div class="container">
-        <!-- 页头 -->
-        <header>
-            <h1>中国本土猫咪品种介绍</h1>
-            <p class="subtitle">中华田园猫是中国本土的自然猫种，经过千百年的自然演化，形成了各具特色的品种。它们不仅颜值高、身体强壮，而且适应能力强，是非常优秀的伴侣动物。</p>
-        </header>
-
-        <!-- 猫咪品种展示 -->
-        <section id="breeds">
-            <h2 class="section-title">常见中国本土猫咪品种</h2>
-            <div class="cats-grid">
-                <!-- 狸花猫 -->
-                <div class="cat-card">
-                    <div class="cat-image">
-                        <img src="lihua.jpeg" alt="">
-                    </div>
-                    <div class="cat-info">
-                        <h3 class="cat-name">狸花猫</h3>
-                        <p class="cat-description">身上有黑、灰相间的美丽虎斑纹，体格健壮，头脑聪明，以捕猎技巧而著称。性格独立但认主后非常忠诚[1](@ref)。</p>
-                        <div class="cat-features">
-                            <span class="feature-tag">虎斑纹</span>
-                            <span class="feature-tag">聪明机灵</span>
-                            <span class="feature-tag">捕猎能手</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 橘猫 -->
-                <div class="cat-card">
-                    <div class="cat-image">
-                        <img src="jumao.jpg" alt="">
-                    </div>
-                    <div class="cat-info">
-                        <h3 class="cat-name">橘猫</h3>
-                        <p class="cat-description">橘猫是毛色分类而非品种，国内大部分橘猫都是狸花猫。它们以爱吃、黏人、会撒娇著称，有"十只橘猫九只胖"的说法[1,2](@ref)。</p>
-                        <div class="cat-features">
-                            <span class="feature-tag">橘色被毛</span>
-                            <span class="feature-tag">性格温和</span>
-                            <span class="feature-tag">易胖体质</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 三花猫 -->
-                <div class="cat-card">
-                    <div class="cat-image">
-                        <img src="sanhua.jpg" alt="">
-                    </div>
-                    <div class="cat-info">
-                        <h3 class="cat-name">三花猫</h3>
-                        <p class="cat-description">身上有黑、橘和白三种颜色的猫，大部分三花猫都是母猫。每只三花猫的花纹都是独一无二的。性格活泼开朗，非常适合饲养[1,4](@ref)。</p>
-                        <div class="cat-features">
-                            <span class="feature-tag">三色被毛</span>
-                            <span class="feature-tag">多为母猫</span>
-                            <span class="feature-tag">活泼开朗</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 山东狮子猫 -->
-                <div class="cat-card">
-                    <div class="cat-image">
-                        <img src="shizi.webp" alt="">
-                    </div>
-                    <div class="cat-info">
-                        <h3 class="cat-name">山东狮子猫</h3>
-                        <p class="cat-description">又称临清狮子猫，由波斯猫与鲁西本地狸猫杂交繁育而来。以纯白毛色和鸳鸯眼(一蓝一黄)最为珍贵。身体强壮、性格温婉、依赖主人[1,3](@ref)。</p>
-                        <div class="cat-features">
-                            <span class="feature-tag">长毛</span>
-                            <span class="feature-tag">鸳鸯眼</span>
-                            <span class="feature-tag">温顺亲人</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 奶牛猫 -->
-                <div class="cat-card">
-                    <div class="cat-image">
-                        <img src="nainiu.webp" alt="">
-                    </div>
-                    <div class="cat-info">
-                        <h3 class="cat-name">奶牛猫</h3>
-                        <p class="cat-description">因黑白花色像奶牛而得名，好奇心强，黏人，活泼，精力旺盛，有"猫中哈士奇"之称，经常上演迷惑行为[1,2](@ref)。</p>
-                        <div class="cat-features">
-                            <span class="feature-tag">黑白花色</span>
-                            <span class="feature-tag">活泼好动</span>
-                            <span class="feature-tag">好奇心强</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 四川简州猫 -->
-                <div class="cat-card">
-                    <div class="cat-image">
-                        <img src="jianzhou.jpg" alt="">
-                    </div>
-                    <div class="cat-info">
-                        <h3 class="cat-name">四川简州猫</h3>
-                        <p class="cat-description">产于四川地区的古老猫种，耳朵特别，有凸出的卷层，看似四只耳朵，故又名"四耳猫"。身材强壮，动作敏捷，是捕鼠能手[3](@ref)。</p>
-                        <div class="cat-features">
-                            <span class="feature-tag">四耳特征</span>
-                            <span class="feature-tag">捕鼠能手</span>
-                            <span class="feature-tag">历史悠久</span>
-                        </div>
-                    </div>
+        <div class="games-container">
+            <div class="game-card">
+                <div class="game-image">🐾</div>
+                <div class="game-content">
+                    <h2 class="game-title">猫咪追逐</h2>
+                    <p class="game-description">移动鼠标，让猫咪追逐你的光标！看看猫咪能不能跟上你的速度。</p>
+                    <a href="#" class="play-btn" onclick="openGame('chase')">开始游戏</a>
                 </div>
             </div>
-        </section>
 
-        <!-- 中华田园猫特点 -->
-        <section id="features">
-            <h2 class="section-title">中华田园猫的特点与优势</h2>
-            <div class="features-section">
-                <div class="features-grid">
-                    <div class="feature-item">
-                        <div class="feature-icon">💪</div>
-                        <h3 class="feature-title">身体强壮</h3>
-                        <p>经过自然选择，身体抵抗力强，患病风险相对较小[1](@ref)。</p>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">🏃</div>
-                        <h3 class="feature-title">活泼好动</h3>
-                        <p>精力充沛，有一定的捕猎技巧，能为家庭增添活力[1](@ref)。</p>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">🌍</div>
-                        <h3 class="feature-title">适应力强</h3>
-                        <p>能很好地适应各种环境，容易饲养[1](@ref)。</p>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">🎓</div>
-                        <h3 class="feature-title">聪明伶俐</h3>
-                        <p>学习能力强，能很快学会上厕所、埋猫砂等[1](@ref)。</p>
-                    </div>
+            <div class="game-card">
+                <div class="game-image">🧠</div>
+                <div class="game-content">
+                    <h2 class="game-title">记忆配对</h2>
+                    <p class="game-description">翻开卡片，找到相同的猫咪配对！测试你的记忆力。</p>
+                    <a href="#" class="play-btn" onclick="openGame('memory')">开始游戏</a>
                 </div>
             </div>
-        </section>
 
-        <!-- 饲养建议 -->
-        <section id="care">
-            <h2 class="section-title">饲养注意事项</h2>
-            <div class="features-section">
-                <p>虽然中华田园猫身体强壮、容易饲养，但仍需注意以下事项[1](@ref)：</p>
-                <ul style="margin: 1rem 0 1rem 2rem;">
-                    <li>避免喂食巧克力、洋葱、葡萄、牛奶等对猫有害的食物</li>
-                    <li>饮食不宜过咸，剩饭剩菜不适合猫咪长期食用</li>
-                    <li>高层住宅需安装防护网，防止猫咪意外坠落</li>
-                    <li>定期接种疫苗和驱虫，保障猫咪健康</li>
-                    <li>适时进行绝育手术，控制流浪猫数量</li>
-                    <li>提供足够的活动空间，经常与猫咪互动玩耍</li>
-                    <li>尽量避免散养，减少意外风险</li>
-                </ul>
-                <p>只要科学饲养，中华田园猫能成为非常出色的家庭伴侣，给您带来无数欢乐时光。</p>
+            <div class="game-card">
+                <div class="game-image">👆</div>
+                <div class="game-content">
+                    <h2 class="game-title">点击游戏</h2>
+                    <p class="game-description">快速点击出现的猫咪！看看30秒内你能点击多少只。</p>
+                    <a href="#" class="play-btn" onclick="openGame('click')">开始游戏</a>
+                </div>
             </div>
-        </section>
+            <div class="game-card">
+                <div class="game-image">🎣</div>
+                <div class="game-content">
+                    <h2 class="game-title">小喵钓鱼</h2>
+                    <p class="game-description">一起来钓鱼</p>
+                    <a href="#" class="play-btn" onclick="startOtherGame('games/fish.html')">开始游戏</a>
+                </div>
+            </div>
+            <div class="game-card">
+                <div class="game-image">🤑</div>
+                <div class="game-content">
+                    <h2 class="game-title">小喵大富翁</h2>
+                    <p class="game-description">快来捡钱了</p>
+                    <a href="#" class="play-btn" onclick="startOtherGame('games/rich-cat.html')">开始游戏</a>
+                </div>
+            </div>
+            <div class="game-card">
+                <div class="game-image">🐍</div>
+                <div class="game-content">
+                    <h2 class="game-title">贪吃猫</h2>
+                    <p class="game-description">根本吃不完</p>
+                    <a href="#" class="play-btn" onclick="startOtherGame('games/snake.html')">开始游戏</a>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- 页脚 -->
-    <footer>
-        <p>© 2023 中华田园猫介绍 | 本页面仅用于展示中国本土猫咪品种</p>
-    </footer>
+    <!-- 追逐游戏屏幕 -->
+    <div id="chase-screen" class="game-screen">
+        <div class="game-area">
+            <span class="close-btn" onclick="closeGame()">×</span>
+            <h2>猫咪追逐游戏</h2>
+            <p>移动鼠标，猫咪会追逐你的光标！</p>
+            <div id="chase-game">
+                <div id="cat"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 记忆游戏屏幕 -->
+    <div id="memory-screen" class="game-screen">
+        <div class="game-area">
+            <span class="close-btn" onclick="closeGame()">×</span>
+            <h2>猫咪记忆配对</h2>
+            <p>翻开两张卡片，找到相同的猫咪配对！</p>
+            <div class="score-display">配对: <span id="pairs-matched">0</span>/8</div>
+            <div id="memory-game"></div>
+        </div>
+    </div>
+
+    <!-- 点击游戏屏幕 -->
+    <div id="click-screen" class="game-screen">
+        <div class="game-area">
+            <span class="close-btn" onclick="closeGame()">×</span>
+            <h2>猫咪点击游戏</h2>
+            <p>点击出现的猫咪！30秒内尽可能多点击。</p>
+            <div class="score-display">分数: <span id="click-score">0</span> | 时间: <span id="click-time">30</span>秒</div>
+            <div id="click-game"></div>
+        </div>
+    </div>
+
+    <!-- 其它游戏 -->
+    <div id="other-screen" class="game-screen">
+        <div class="game-area">
+            <span class="close-btn" onclick="closeGame()">×</span>
+            <iframe></iframe>
+        </div>
+    </div>
 
     <script>
-        // 平滑滚动到锚点
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                if(targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if(targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 100,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-        
-        // 导航栏滚动效果
-        window.addEventListener('scroll', function() {
-            const nav = document.querySelector('nav');
-            if (window.scrollY > 50) {
-                nav.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
-            } else {
-                nav.style.boxShadow = 'none';
+        // 游戏控制函数
+        function openGame(gameType) {
+            document.getElementById(gameType + '-screen').style.display = 'flex';
+
+            // 初始化游戏
+            if (gameType === 'chase') {
+                initChaseGame();
+            } else if (gameType === 'memory') {
+                initMemoryGame();
+            } else if (gameType === 'click') {
+                initClickGame();
             }
-        });
+        }
+
+        function closeGame() {
+            document.querySelectorAll('.game-screen').forEach(screen => {
+                screen.style.display = 'none';
+            });
+
+            const box = document.getElementById('other-screen');
+            if (box) {
+                const webView = box.getElementsByTagName('iframe')[0];
+                webView.src = '';
+            }
+
+            // 停止所有游戏计时器
+            clearInterval(clickGameTimer);
+            clearTimeout(clickCatTimer);
+        }
+
+        function startOtherGame(url) {
+
+            const box = document.getElementById('other-screen');
+            if (!box) {
+                return
+            }
+            const webView = box.getElementsByTagName('iframe')[0];
+            webView.src = url;
+
+            box.style.display = 'flex';
+        }
+
+        // 追逐游戏
+        function initChaseGame() {
+            const cat = document.getElementById('cat');
+            const gameArea = document.getElementById('chase-game');
+
+            // 初始位置
+            cat.style.left = (gameArea.offsetWidth / 2 - 40) + 'px';
+            cat.style.top = (gameArea.offsetHeight / 2 - 40) + 'px';
+
+            gameArea.addEventListener('mousemove', (e) => {
+                const rect = gameArea.getBoundingClientRect();
+                const x = e.clientX - rect.left - 40;
+                const y = e.clientY - rect.top - 40;
+
+                // 限制在游戏区域内
+                const boundedX = Math.max(0, Math.min(x, gameArea.offsetWidth - 80));
+                const boundedY = Math.max(0, Math.min(y, gameArea.offsetHeight - 80));
+
+                cat.style.left = boundedX + 'px';
+                cat.style.top = boundedY + 'px';
+            });
+        }
+
+        // 记忆游戏
+        function initMemoryGame() {
+            const memoryGame = document.getElementById('memory-game');
+            memoryGame.innerHTML = '';
+
+            // 猫咪图标数组
+            const cats = ['😺', '😸', '😹', '😻', '😼', '😽', '🙀', '😿'];
+            const cards = [...cats, ...cats]; // 复制一份用于配对
+
+            // 洗牌
+            for (let i = cards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cards[i], cards[j]] = [cards[j], cards[i]];
+            }
+
+            // 创建卡片
+            cards.forEach((cat, index) => {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                card.dataset.index = index;
+                card.dataset.cat = cat;
+                card.addEventListener('click', flipCard);
+                memoryGame.appendChild(card);
+            });
+
+            // 游戏状态
+            let flippedCards = [];
+            let matchedPairs = 0;
+
+            // 翻牌函数
+            function flipCard() {
+                if (flippedCards.length === 2 || this.classList.contains('flipped')) {
+                    return;
+                }
+
+                this.classList.add('flipped');
+                this.textContent = this.dataset.cat;
+                flippedCards.push(this);
+
+                if (flippedCards.length === 2) {
+                    checkForMatch();
+                }
+            }
+
+            // 检查匹配
+            function checkForMatch() {
+                const [card1, card2] = flippedCards;
+
+                if (card1.dataset.cat === card2.dataset.cat) {
+                    // 匹配成功
+                    card1.removeEventListener('click', flipCard);
+                    card2.removeEventListener('click', flipCard);
+                    flippedCards = [];
+                    matchedPairs++;
+                    document.getElementById('pairs-matched').textContent = matchedPairs;
+
+                    if (matchedPairs === 8) {
+                        setTimeout(() => {
+                            alert('恭喜！你完成了所有配对！');
+                        }, 500);
+                    }
+                } else {
+                    // 不匹配，翻回去
+                    setTimeout(() => {
+                        card1.classList.remove('flipped');
+                        card2.classList.remove('flipped');
+                        card1.textContent = '';
+                        card2.textContent = '';
+                        flippedCards = [];
+                    }, 1000);
+                }
+            }
+        }
+
+        // 点击游戏
+        let clickGameTimer;
+        let clickCatTimer;
+        let clickScore = 0;
+
+        function initClickGame() {
+            const clickGame = document.getElementById('click-game');
+            clickGame.innerHTML = '';
+            clickScore = 0;
+            document.getElementById('click-score').textContent = '0';
+            document.getElementById('click-time').textContent = '30';
+
+            // 重置计时器
+            clearInterval(clickGameTimer);
+            clearTimeout(clickCatTimer);
+
+            // 游戏时间
+            let timeLeft = 30;
+            clickGameTimer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('click-time').textContent = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(clickGameTimer);
+                    clearTimeout(clickCatTimer);
+                    alert(`游戏结束！你的得分是: ${clickScore}`);
+                }
+            }, 1000);
+
+            // 开始生成猫咪
+            spawnClickCat();
+        }
+
+        function spawnClickCat() {
+            if (document.getElementById('click-time').textContent === '0') {
+                return;
+            }
+
+            const clickGame = document.getElementById('click-game');
+            const cat = document.createElement('div');
+            cat.className = 'click-cat';
+
+            // 随机位置
+            const x = Math.random() * (clickGame.offsetWidth - 60);
+            const y = Math.random() * (clickGame.offsetHeight - 60);
+
+            cat.style.left = x + 'px';
+            cat.style.top = y + 'px';
+
+            // 点击事件
+            cat.addEventListener('click', () => {
+                clickScore++;
+                document.getElementById('click-score').textContent = clickScore;
+                cat.remove();
+            });
+
+            clickGame.appendChild(cat);
+
+            // 3秒后消失
+            setTimeout(() => {
+                if (cat.parentNode === clickGame) {
+                    cat.remove();
+                }
+            }, 3000);
+
+            // 0.5-2秒后生成下一只
+            const delay = 500 + Math.random() * 1500;
+            clickCatTimer = setTimeout(spawnClickCat, delay);
+        }
     </script>
 </body>
+
 </html>

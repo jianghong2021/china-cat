@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>猫咪钓鱼小游戏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial Rounded MT Bold', 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #87CEEB, #E0F6FF);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .game-container {
+            width: 800px;
+            max-width: 95%;
+            text-align: center;
+            position: relative;
+        }
+        
+        .game-header {
+            background-color: #FFB6C1;
+            color: #fff;
+            padding: 15px;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 0 #FF8BA0;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #fff;
+        }
+        
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            background-color: #FFD1DC;
+            padding: 15px 20px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #5a5a5a;
+        }
+        
+        .game-area {
+            position: relative;
+            height: 500px;
+            background-color: #B5E8FF;
+            overflow: hidden;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .cat {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 100px;
+            z-index: 10;
+            transition: left 0.2s ease;
+        }
+        
+        .cat-body {
+            width: 120px;
+            height: 80px;
+            background-color: #FFA726;
+            border-radius: 50% 50% 40% 40%;
+            position: absolute;
+            top: 20px;
+        }
+        
+        .cat-ear {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 30px solid #FFA726;
+            top: 0;
+        }
+        
+        .cat-ear.left {
+            left: 20px;
+        }
+        
+        .cat-ear.right {
+            right: 20px;
+        }
+        
+        .cat-eye {
+            position: absolute;
+            width: 20px;
+            height: 30px;
+            background-color: white;
+            border-radius: 50%;
+            top: 40px;
+        }
+        
+        .cat-eye.left {
+            left: 35px;
+        }
+        
+        .cat-eye.right {
+            right: 35px;
+        }
+        
+        .cat-pupil {
+            position: absolute;
+            width: 10px;
+            height: 15px;
+            background-color: #333;
+            border-radius: 50%;
+            top: 7px;
+            left: 5px;
+        }
+        
+        .cat-nose {
+            position: absolute;
+            width: 15px;
+            height: 10px;
+            background-color: #FF6B8B;
+            border-radius: 50%;
+            top: 55px;
+            left: 52.5px;
+        }
+        
+        .fishing-rod {
+            position: absolute;
+            width: 4px;
+            height: 0;
+            background-color: #8B4513;
+            top: 70px;
+            left: 60px;
+            transform-origin: top center;
+            transition: height 0.3s ease;
+        }
+        
+        .fishing-line {
+            position: absolute;
+            width: 2px;
+            height: 0;
+            background-color: #aaa;
+            top: 70px;
+            left: 61px;
+            transform-origin: top center;
+        }
+        
+        .water {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100px;
+            background-color: #4A90E2;
+        }
+        
+        .fish {
+            position: absolute;
+            width: 60px;
+            height: 30px;
+            bottom: 20px;
+            transition: transform 0.1s;
+        }
+        
+        .fish-body {
+            width: 60px;
+            height: 30px;
+            background-color: #FF5252;
+            border-radius: 50%;
+            position: relative;
+        }
+        
+        .fish-fin {
+            position: absolute;
+            width: 20px;
+            height: 15px;
+            background-color: #FF5252;
+            border-radius: 50%;
+            top: 5px;
+            left: -5px;
+        }
+        
+        .fish-tail {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-left: 20px solid #FF5252;
+            right: -5px;
+            top: 0;
+        }
+        
+        .fish.orange .fish-body, .fish.orange .fish-fin, .fish.orange .fish-tail {
+            background-color: #FF9800;
+            border-left-color: #FF9800;
+        }
+        
+        .fish.blue .fish-body, .fish.blue .fish-fin, .fish.blue .fish-tail {
+            background-color: #2196F3;
+            border-left-color: #2196F3;
+        }
+        
+        .bubble {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            bottom: 0;
+        }
+        
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        button {
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            background-color: #FFB6C1;
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #FF8BA0;
+            transition: all 0.1s;
+        }
+        
+        button:hover {
+            background-color: #FFA4B2;
+        }
+        
+        button:active {
+            transform: translateY(5px);
+            box-shadow: 0 0 0 #FF8BA0;
+        }
+        
+        .instructions {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 20px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        .game-over {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 100;
+            border-radius: 0 0 20px 20px;
+        }
+        
+        .game-over-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 80%;
+        }
+        
+        .game-over h2 {
+            color: #FF6B8B;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .final-score {
+            font-size: 2rem;
+            margin: 20px 0;
+            color: #4A90E2;
+        }
+        
+        .fish-caught {
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .game-area {
+                height: 400px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            button {
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>🐱 猫咪钓鱼 🎣</h1>
+            <p class="subtitle">移动猫咪，钓起尽可能多的鱼！小心别让鱼跑掉哦～</p>
+        </div>
+        
+        <div class="game-stats">
+            <div>分数: <span id="score">0</span></div>
+            <div>时间: <span id="time">60</span>秒</div>
+            <div>钓到: <span id="caught">0</span>条鱼</div>
+        </div>
+        
+        <div class="game-area" id="gameArea">
+            <div class="cat" id="cat">
+                <div class="cat-body"></div>
+                <div class="cat-ear left"></div>
+                <div class="cat-ear right"></div>
+                <div class="cat-eye left"><div class="cat-pupil"></div></div>
+                <div class="cat-eye right"><div class="cat-pupil"></div></div>
+                <div class="cat-nose"></div>
+                <div class="fishing-rod" id="fishingRod"></div>
+                <div class="fishing-line" id="fishingLine"></div>
+            </div>
+            
+            <div class="water"></div>
+            
+            <div class="fish-caught" id="fishCaught">
+                钓到一条鱼！ +<span id="fishPoints">0</span>分
+            </div>
+            
+            <div class="game-over" id="gameOver">
+                <div class="game-over-content">
+                    <h2>游戏结束！</h2>
+                    <p>猫咪钓了半天鱼，有点累了～</p>
+                    <div class="final-score">最终得分: <span id="finalScore">0</span></div>
+                    <p>一共钓到了 <span id="finalCaught">0</span> 条鱼</p>
+                    <button id="restartButton">再玩一次</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="leftButton">← 向左移动</button>
+            <button id="castButton">抛竿钓鱼</button>
+            <button id="rightButton">向右移动 →</button>
+        </div>
+        
+        <div class="instructions">
+            <p><strong>游戏说明：</strong>使用左右按钮移动猫咪，点击"抛竿钓鱼"按钮放下鱼线。当鱼游到鱼钩附近时，再次点击"抛竿钓鱼"按钮收起鱼线。钓到不同颜色的鱼获得不同分数：红鱼(10分)、橙鱼(20分)、蓝鱼(30分)。游戏时间60秒。</p>
+        </div>
+    </div>
+
+    <script>
+        // 游戏变量
+        let score = 0;
+        let timeLeft = 60;
+        let fishCaught = 0;
+        let gameActive = true;
+        let catPosition = 50; // 百分比
+        let isCasting = false;
+        let fishingLineLength = 0;
+        let maxLineLength = 300;
+        let currentFish = null;
+        let gameInterval;
+        let fishInterval;
+        let bubbleInterval;
+        
+        // DOM元素
+        const catElement = document.getElementById('cat');
+        const fishingRod = document.getElementById('fishingRod');
+        const fishingLine = document.getElementById('fishingLine');
+        const scoreElement = document.getElementById('score');
+        const timeElement = document.getElementById('time');
+        const caughtElement = document.getElementById('caught');
+        const gameOverElement = document.getElementById('gameOver');
+        const finalScoreElement = document.getElementById('finalScore');
+        const finalCaughtElement = document.getElementById('finalCaught');
+        const fishCaughtElement = document.getElementById('fishCaught');
+        const fishPointsElement = document.getElementById('fishPoints');
+        const gameArea = document.getElementById('gameArea');
+        
+        // 按钮
+        const leftButton = document.getElementById('leftButton');
+        const rightButton = document.getElementById('rightButton');
+        const castButton = document.getElementById('castButton');
+        const restartButton = document.getElementById('restartButton');
+        
+        // 初始化游戏
+        function initGame() {
+            score = 0;
+            timeLeft = 60;
+            fishCaught = 0;
+            gameActive = true;
+            catPosition = 50;
+            isCasting = false;
+            fishingLineLength = 0;
+            
+            updateUI();
+            catElement.style.left = `${catPosition}%`;
+            fishingRod.style.height = '0px';
+            fishingLine.style.height = '0px';
+            
+            // 清除之前的鱼
+            document.querySelectorAll('.fish, .bubble').forEach(el => el.remove());
+            
+            // 隐藏游戏结束界面
+            gameOverElement.style.display = 'none';
+            
+            // 开始游戏循环
+            clearInterval(gameInterval);
+            clearInterval(fishInterval);
+            clearInterval(bubbleInterval);
+            
+            gameInterval = setInterval(updateGame, 1000);
+            fishInterval = setInterval(createFish, 2000);
+            bubbleInterval = setInterval(createBubble, 500);
+        }
+        
+        // 更新游戏状态
+        function updateGame() {
+            if (!gameActive) return;
+            
+            timeLeft--;
+            timeElement.textContent = timeLeft;
+            
+            if (timeLeft <= 0) {
+                endGame();
+            }
+        }
+        
+        // 创建鱼
+        function createFish() {
+            if (!gameActive) return;
+            
+            const fish = document.createElement('div');
+            fish.className = 'fish';
+            
+            // 随机鱼的类型和颜色
+            const fishTypes = ['red', 'orange', 'blue'];
+            const fishType = fishTypes[Math.floor(Math.random() * fishTypes.length)];
+            
+            if (fishType !== 'red') {
+                fish.classList.add(fishType);
+            }
+            
+            // 随机位置
+            const leftPosition = Math.random() * 90;
+            fish.style.left = `${leftPosition}%`;
+            
+            // 添加鱼的身体部件
+            const fishBody = document.createElement('div');
+            fishBody.className = 'fish-body';
+            
+            const fishFin = document.createElement('div');
+            fishFin.className = 'fish-fin';
+            
+            const fishTail = document.createElement('div');
+            fishTail.className = 'fish-tail';
+            
+            fish.appendChild(fishBody);
+            fish.appendChild(fishFin);
+            fish.appendChild(fishTail);
+            
+            gameArea.appendChild(fish);
+            
+            // 让鱼游动
+            let direction = Math.random() > 0.5 ? 1 : -1;
+            let speed = 1 + Math.random() * 2;
+            let position = leftPosition;
+            
+            function moveFish() {
+                if (!gameActive) return;
+                
+                position += direction * speed;
+                fish.style.left = `${position}%`;
+                
+                // 碰到边缘改变方向
+                if (position <= 0 || position >= 90) {
+                    direction *= -1;
+                    fish.style.transform = `scaleX(${direction > 0 ? 1 : -1})`;
+                }
+                
+                // 检查是否被钓到
+                if (isCasting) {
+                    const fishRect = fish.getBoundingClientRect();
+                    const lineRect = fishingLine.getBoundingClientRect();
+                    
+                    const lineX = lineRect.left + lineRect.width / 2;
+                    const lineY = lineRect.top + lineRect.height;
+                    
+                    const fishX = fishRect.left + fishRect.width / 2;
+                    const fishY = fishRect.top + fishRect.height / 2;
+                    
+                    const distance = Math.sqrt(Math.pow(lineX - fishX, 2) + Math.pow(lineY - fishY, 2));
+                    
+                    if (distance < 40) {
+                        catchFish(fish, fishType);
+                    }
+                }
+                
+                requestAnimationFrame(moveFish);
+            }
+            
+            // 设置鱼的初始方向
+            fish.style.transform = `scaleX(${direction > 0 ? 1 : -1})`;
+            
+            // 5-15秒后移除鱼
+            setTimeout(() => {
+                if (fish.parentNode) {
+                    fish.remove();
+                }
+            }, 5000 + Math.random() * 10000);
+            
+            moveFish();
+        }
+        
+        // 创建气泡
+        function createBubble() {
+            if (!gameActive) return;
+            
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            
+            // 随机大小和位置
+            const size = 5 + Math.random() * 20;
+            const left = Math.random() * 100;
+            
+            bubble.style.width = `${size}px`;
+            bubble.style.height = `${size}px`;
+            bubble.style.left = `${left}%`;
+            
+            gameArea.appendChild(bubble);
+            
+            // 气泡动画
+            let position = 100;
+            function animateBubble() {
+                if (!gameActive) return;
+                
+                position -= 0.5;
+                bubble.style.bottom = `${position}px`;
+                
+                if (position > -20) {
+                    requestAnimationFrame(animateBubble);
+                } else {
+                    bubble.remove();
+                }
+            }
+            
+            animateBubble();
+        }
+        
+        // 钓鱼
+        function castFishingLine() {
+            if (!gameActive) return;
+            
+            if (!isCasting) {
+                // 抛竿
+                isCasting = true;
+                fishingRod.style.height = '100px';
+                fishingRod.style.transform = 'rotate(30deg)';
+                
+                let length = 0;
+                const castInterval = setInterval(() => {
+                    if (length < maxLineLength) {
+                        length += 10;
+                        fishingLineLength = length;
+                        fishingLine.style.height = `${length}px`;
+                    } else {
+                        clearInterval(castInterval);
+                    }
+                }, 30);
+                
+                castButton.textContent = "收竿";
+            } else {
+                // 收竿
+                isCasting = false;
+                fishingRod.style.transform = 'rotate(0deg)';
+                
+                let length = fishingLineLength;
+                const reelInterval = setInterval(() => {
+                    if (length > 0) {
+                        length -= 15;
+                        fishingLine.style.height = `${length}px`;
+                    } else {
+                        clearInterval(reelInterval);
+                        fishingRod.style.height = '0px';
+                        fishingLine.style.height = '0px';
+                        castButton.textContent = "抛竿钓鱼";
+                    }
+                }, 30);
+            }
+        }
+        
+        // 抓到鱼
+        function catchFish(fish, fishType) {
+            if (!fish.parentNode) return;
+            
+            // 计算分数
+            let points = 0;
+            switch(fishType) {
+                case 'red': points = 10; break;
+                case 'orange': points = 20; break;
+                case 'blue': points = 30; break;
+            }
+            
+            score += points;
+            fishCaught++;
+            
+            // 显示得分
+            fishCaughtElement.style.display = 'block';
+            fishPointsElement.textContent = points;
+            
+            setTimeout(() => {
+                fishCaughtElement.style.display = 'none';
+            }, 1000);
+            
+            // 移除鱼
+            fish.remove();
+            
+            // 更新UI
+            updateUI();
+            
+            // 自动收竿
+            if (isCasting) {
+                setTimeout(() => {
+                    castFishingLine();
+                }, 300);
+            }
+        }
+        
+        // 移动猫咪
+        function moveCat(direction) {
+            if (!gameActive) return;
+            
+            catPosition += direction * 5;
+            
+            // 限制移动范围
+            if (catPosition < 5) catPosition = 5;
+            if (catPosition > 95) catPosition = 95;
+            
+            catElement.style.left = `${catPosition}%`;
+        }
+        
+        // 更新UI
+        function updateUI() {
+            scoreElement.textContent = score;
+            timeElement.textContent = timeLeft;
+            caughtElement.textContent = fishCaught;
+        }
+        
+        // 结束游戏
+        function endGame() {
+            gameActive = false;
+            clearInterval(gameInterval);
+            clearInterval(fishInterval);
+            clearInterval(bubbleInterval);
+            
+            finalScoreElement.textContent = score;
+            finalCaughtElement.textContent = fishCaught;
+            gameOverElement.style.display = 'flex';
+        }
+        
+        // 事件监听
+        leftButton.addEventListener('click', () => moveCat(-1));
+        rightButton.addEventListener('click', () => moveCat(1));
+        castButton.addEventListener('click', castFishingLine);
+        restartButton.addEventListener('click', initGame);
+        
+        // 键盘控制
+        document.addEventListener('keydown', (e) => {
+            if (!gameActive) return;
+            
+            switch(e.key) {
+                case 'ArrowLeft':
+                case 'a':
+                case 'A':
+                    moveCat(-1);
+                    break;
+                case 'ArrowRight':
+                case 'd':
+                case 'D':
+                    moveCat(1);
+                    break;
+                case ' ':
+                case 'Enter':
+                    castFishingLine();
+                    break;
+            }
+        });
+        
+        // 触摸控制（移动设备）
+        let touchStartX = 0;
+        gameArea.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+        });
+        
+        gameArea.addEventListener('touchend', (e) => {
+            if (!gameActive) return;
+            
+            const touchEndX = e.changedTouches[0].clientX;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > 30) {
+                if (diff > 0) {
+                    moveCat(-1); // 向左滑动
+                } else {
+                    moveCat(1); // 向右滑动
+                }
+            }
+        });
+        
+        // 双击抛竿/收竿
+        let lastTap = 0;
+        gameArea.addEventListener('touchend', (e) => {
+            if (!gameActive) return;
+            
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            
+            if (tapLength < 300 && tapLength > 0) {
+                // 双击事件
+                castFishingLine();
+                e.preventDefault();
+            }
+            
+            lastTap = currentTime;
+        });
+        
+        // 开始游戏
+        initGame();
+    </script>
+</body>
+</html>
